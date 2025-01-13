@@ -1,10 +1,14 @@
-const http = require("http");
 const express = require("express");
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
 
 const app = express();
 
-const server = http.createServer(app);
+app.use(express.urlencoded({ extended: false }));
 
-server.listen(3000, () => {
-  console.log("Server running at http://localhost:3000/");
+app.use(adminRoutes);
+app.use(shopRoutes);
+
+app.listen(3000, () => {
+  console.log("Server runs on http://localhost:3000 ");
 });

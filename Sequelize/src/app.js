@@ -1,8 +1,11 @@
 import express from "express";
 import sequelize from "./utils/db.js";
-import User from "./models/userModel.js";
+import userRoutes from "../routes/userRoutes.js";
+import uploadRoutes from "../routes/uploadRoutes.js";
 
 const app = express();
+app.use(express.json());
+app.use("/assets", express.static("public/images"));
 
 const PORT = 3000;
 
@@ -15,28 +18,8 @@ app.get("/check-connection", (req, res) => {
     .catch((err) => res.send("Error Connection : " + err.message));
 });
 
-app.get("/", async (req, res) => {
-  try {
-    const data = await User.findAll();
-    res.send(data);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
-app.get("/insert", async (req, res) => {
-  try {
-    const data = await User.create({
-      name: "user2",
-      email: "user2@gmail.com",
-      age: 10,
-    });
-
-    res.send(data);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
+app.use("/api", userRoutes);
+app.use("/upload", uploadRoutes);
 
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
